@@ -15,12 +15,16 @@ class Camera:
         if self.is_running:
             return
             
-        # Initialize camera
-        self.cap = cv2.VideoCapture(self.camera_id)
+        # Try different camera indices
+        for camera_id in range(5):  # Try camera indices 0-4
+            self.cap = cv2.VideoCapture(camera_id)
+            if self.cap.isOpened():
+                print(f"Successfully opened camera with ID {camera_id}")
+                break
         
         # Check if camera opened successfully
         if not self.cap.isOpened():
-            raise ValueError(f"Failed to open camera with ID {self.camera_id}")
+            raise ValueError(f"Failed to open camera")
         
         # Set camera properties for better performance
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)

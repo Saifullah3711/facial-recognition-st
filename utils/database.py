@@ -6,6 +6,7 @@ import numpy as np
 from bson.binary import Binary
 import pickle
 import logging
+import streamlit as st
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -13,22 +14,26 @@ logger = logging.getLogger(__name__)
 
 class Database:
     def __init__(self):
-        # Get MongoDB URI from environment variables
-        mongodb_uri = os.getenv("MONGODB_URI")
-        if not mongodb_uri:
-            raise ValueError("MongoDB URI not found in environment variables")
-        
         try:
-            # Connect to MongoDB
-            logger.info("Connecting to MongoDB Atlas...")
-            self.client = pymongo.MongoClient(mongodb_uri)
+            # Try to get MongoDB URI from Streamlit secrets first
+            if hasattr(st, 'secrets') and 'mongodb' in st.secrets:
+                mongodb_uri = st.secrets["mongodb"]["uri"]
+            # Fall back to environment variable
+            else:
+                mongodb_uri = os.getenv("MONGODB_URI")
             
-            # Test the connection
+            if not mongodb_uri:
+                raise ValueError("MongoDB URI not found in secrets or environment variables")
+            
+            # Connect to MongoDB
+            self.client = pymongo.MongoClient(mongodb_uri)
+            self.db = self.client.face_recognition
+            
+            # Test connection
             self.client.admin.command('ping')
-            logger.info("Successfully connected to MongoDB Atlas")
+            print("Connected to MongoDB successfully!")
             
             # Set up database and collections
-            self.db = self.client["face_verification"]
             self.users_collection = self.db["users"]
             self.logs_collection = self.db["logs"]
             
@@ -36,7 +41,7 @@ class Database:
             self._initialize_collections()
             
         except Exception as e:
-            logger.error(f"Error connecting to MongoDB: {str(e)}")
+            print(f"Error connecting to MongoDB: {e}")
             raise
     
     def _initialize_collections(self):

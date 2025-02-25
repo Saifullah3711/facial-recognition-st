@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  face-recognition-app:
+    build: .
+    volumes:
+      - ./.streamlit:/root/.streamlit
+    network_mode: "host"
+    devices:
+      - /dev/video0:/dev/video0  # Adjust the device path if needed
+    restart: unless-stopped 

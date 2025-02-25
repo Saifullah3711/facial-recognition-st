@@ -45,15 +45,28 @@ def realtime_recognition_camera():
     """Camera component for real-time recognition using native Streamlit"""
     # Show camera input with a unique key
     st.subheader("Take a snapshot for recognition")
-    img_file = st.camera_input("Capture for recognition", key="realtime_camera")
     
-    # Process the captured image if available
-    if img_file is not None:
-        # Convert to OpenCV format
-        bytes_data = img_file.getvalue()
-        np_array = np.frombuffer(bytes_data, np.uint8)
-        frame = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
-        
-        return frame
+    # Add file upload option
+    upload_tab, camera_tab = st.tabs(["Upload Image", "Use Camera"])
+    
+    with upload_tab:
+        img_file = st.file_uploader("Upload a face image", type=["jpg", "jpeg", "png"])
+        if img_file is not None:
+            # Convert to OpenCV format
+            bytes_data = img_file.getvalue()
+            np_array = np.frombuffer(bytes_data, np.uint8)
+            frame = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+            st.image(img_file, caption="Uploaded Image")
+            return frame
+    
+    with camera_tab:
+        # Original camera code
+        img_file = st.camera_input("Capture for recognition", key="realtime_camera")
+        if img_file is not None:
+            # Convert to OpenCV format
+            bytes_data = img_file.getvalue()
+            np_array = np.frombuffer(bytes_data, np.uint8)
+            frame = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+            return frame
     
     return None 
