@@ -22,8 +22,9 @@ A facial verification MVP built using InsightFace, Streamlit, OpenCV, and MongoD
 
 1. Clone this repository:
    ```
-   git clone <repository-url>
-   cd face-verification-app
+   git clone https://github.com/Saifullah3711/facial-recognition-st
+   
+   cd facial-recognition-st
    ```
 
 2. Install dependencies:
@@ -49,16 +50,11 @@ If you encounter DLL loading errors with ONNX or InsightFace, try these solution
 
 2. Install the Visual C++ Redistributable:
    - Download and install the [Microsoft Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+   - Restart your system
+   - Run the application again
 
-3. If you're using Conda, try creating a fresh environment:
-   ```
-   conda create -n face_app python=3.9
-   conda activate face_app
-   pip install -r requirements.txt
-   pip install onnx==1.16.1  # Apply the ONNX downgrade
-   ```
 
-4. If issues persist, the application will automatically fall back to using OpenCV's face detection,
+3. If issues persist, the application will automatically fall back to using OpenCV's face detection,
    which is less accurate but more compatible.
 
 Reference: [ONNX GitHub Issue #6267](https://github.com/onnx/onnx/issues/6267)
